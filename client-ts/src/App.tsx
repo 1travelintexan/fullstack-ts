@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { useContext, useEffect, useState } from "react";
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import { HomePage } from "./components/HomePage";
+import { Signup } from "./components/Signup";
+import { Login } from "./components/Login";
+import axios from "axios";
+import { Navbar } from "./components/Navbar";
+import { Profile } from "./components/Profile";
+import { AuthContext } from "./contexts/auth.context.tsx";
+type Todo = {
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+};
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [todos, setTodos] = useState<Todo[] | null>(null);
+  const { user } = useContext(AuthContext);
+  // console.log("user from context", user);
+  useEffect(() => {
+    async function getTodos() {
+      try {
+        const { data } = await axios.get<Todo[]>(
+          "http://localhost:5005/todo/all-todos"
+        );
+        // console.log("here are all the todos", data);
+        setTodos(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getTodos();
+  }, []);
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Navbar />
+      <h1>{user?.username}'s TS Full Stack</h1>
+      <Routes>
+        <Route path="/" element={<HomePage todos={todos} />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
