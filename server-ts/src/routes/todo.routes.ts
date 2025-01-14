@@ -7,7 +7,7 @@ router.get("/all-todos", async (req: Request, res: Response) => {
   try {
     const allTodos = await prisma.todo.findMany();
     console.log("here are all the todos", allTodos);
-    res.status(200).json({ allTodos });
+    res.status(200).json(allTodos);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -18,7 +18,7 @@ router.get("/one-todo/:id", async (req: Request, res: Response) => {
     const oneTodo = await prisma.todo.findFirst({
       where: { id: req.params.id },
     });
-    console.log("here are all the todos", oneTodo);
+    // console.log("here are all the todos", oneTodo);
     res.status(200).json({ oneTodo });
   } catch (error) {
     console.log(error);

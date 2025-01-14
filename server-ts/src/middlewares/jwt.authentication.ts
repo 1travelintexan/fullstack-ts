@@ -6,7 +6,13 @@ const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
     req.headers.authorization.split(" ")[0] === "Bearer"
   ) {
     const theToken = req.headers.authorization.split(" ")[1];
-    const currentUser = jwt.verify(process.env.TOKEN_SECRET, theToken);
+    console.log(
+      "inside the middleware",
+      theToken,
+      "the secret",
+      process.env.TOKEN_SECRET
+    );
+    const currentUser = jwt.verify(theToken, process.env.TOKEN_SECRET);
     req.payload = currentUser; // Error: Property 'payload' does not exist on type 'Request'...
     next();
   } else {

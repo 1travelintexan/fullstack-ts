@@ -18,3 +18,16 @@ export interface RequestUpdateTodo extends Request {
     ownerId?: string;
   };
 }
+export interface RequestCreateUser extends Request {
+  body: {
+    username: string;
+    email: string;
+    password: string;
+  };
+}
+export interface RequestLoginUser extends Request {
+  body: {
+    email: string;
+    password: string;
+  };
+}
